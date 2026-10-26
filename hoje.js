@@ -31,6 +31,7 @@
         </div>
         <button type="button" class="seta" data-acao="dia-seguinte" aria-label="Próximo dia" ${dia >= hoje ? 'disabled' : ''}>›</button>
       </div>
+      <div class="hoje-acoes"><button type="button" class="btn mini" data-acao="imprimir-semana">🖨 Imprimir semana</button></div>
       ${aberto ? '' : `<div class="faixa-fechado"><b>Restaurante fechado${excecao && excecao.motivo ? ' · ' + App.esc(excecao.motivo) : ''}</b>
         <button type="button" class="btn" data-acao="abrir-dia">Abrir este dia mesmo assim</button></div>`}
       ${funcs.length ? `
@@ -56,6 +57,7 @@
       case 'dia-hoje': mudarDia(hoje); break;
       case 'alternar': App.alternar(b.dataset.id, e.dia).catch(App.erro); break;
       case 'abrir-dia': abrirDia(e.dia).catch(App.erro); break;
+      case 'imprimir-semana': Semana.imprimir(e.dia).catch(App.erro); break;
     }
   });
 

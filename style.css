@@ -172,3 +172,30 @@ dialog p { margin: 0; font-weight: 700; }
 .etiqueta { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; padding: 4px 10px; border-radius: 999px; }
 .etiqueta.fechado { background: var(--coral-claro); color: var(--coral); }
 .etiqueta.aberto { background: var(--verde-claro); color: var(--verde); }
+
+/* Impressão da semana */
+.hoje-acoes { display: flex; justify-content: center; margin: -6px 0 18px; }
+#impressao { display: none; }
+@media print {
+  @page { size: A4 landscape; margin: 12mm; }
+  body { background: #fff; min-height: 0; font-size: 12pt; }
+  body > :not(#impressao) { display: none !important; }
+  #impressao { display: block; color: #000; }
+  #impressao h1 { font-family: var(--titulo); font-size: 22pt; margin-bottom: 2mm; }
+  #impressao h1::first-letter { text-transform: uppercase; }
+  .imp-sub { margin: 0 0 5mm; font-weight: 700; color: #444; }
+  .imp-grade { width: 100%; border-collapse: collapse; }
+  .imp-grade th, .imp-grade td { border: 1px solid #555; padding: 2.5mm 2mm; text-align: center; }
+  .imp-grade thead th { background: #eee; font-size: 11pt; }
+  .imp-grade thead th span { display: block; font-weight: 600; font-size: 9pt; }
+  .imp-grade .imp-nome { text-align: left; font-weight: 800; width: 28%; }
+  .imp-grade .imp-nome small { display: block; font-weight: 600; color: #555; }
+  .imp-grade td { font-size: 15pt; font-weight: 900; height: 11mm; }
+  .imp-grade td.fechado, .imp-grade th.fechado { background: #ddd; color: #666; font-size: 9pt; font-weight: 700; }
+  .imp-grade td.fora { background: #f3f3f3; }
+  .imp-grade td.imp-faltas { width: 9%; }
+  .imp-grade * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .imp-legenda { margin-top: 4mm; font-size: 10pt; color: #444; }
+  .imp-assinatura { margin-top: 14mm; display: flex; gap: 20mm; }
+  .imp-assinatura span { flex: 1; border-top: 1px solid #000; padding-top: 1.5mm; font-size: 10pt; text-align: center; }
+}

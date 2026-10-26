@@ -29,6 +29,11 @@
     const d = new Date(ano, mes - 1 + n, 1);
     return { ano: d.getFullYear(), mes: d.getMonth() + 1 };
   }
+  // Semana de segunda a domingo que contém o dia.
+  function semanaDoDia(dia) {
+    const seg = somarDias(dia, -((diaDaSemana(dia) + 6) % 7));
+    return Array.from({ length: 7 }, (_, i) => somarDias(seg, i));
+  }
   const mesDoDia = dia => ({ ano: Number(dia.slice(0, 4)), mes: Number(dia.slice(5, 7)) });
   const nomeDoMes = (ano, mes) => `${MESES[mes - 1]} de ${ano}`;
   function formatarDiaLongo(dia) {
@@ -98,7 +103,7 @@
 
   const api = {
     CORES, SEMANA, SEMANA_CURTA,
-    hojeLocal, somarDias, diaDaSemana, diasDoMes, somarMeses, mesDoDia, nomeDoMes, formatarDiaLongo, formatarData,
+    hojeLocal, somarDias, diaDaSemana, diasDoMes, semanaDoDia, somarMeses, mesDoDia, nomeDoMes, formatarDiaLongo, formatarData,
     iniciais, sugerirCor, validarFuncionario, validarExcecao,
     chave, montarCtx, diaAberto, ativoNoDia, ativosNoDia, funcionariosDoMes, statusCelula, podeMarcar, faltasNoMes,
   };
