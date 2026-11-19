@@ -31,6 +31,12 @@
       return;
     }
     await App.aposLogin();
+    // Login aceito mas os dados não abriram (sessão recusada): não deixa o botão preso em "Entrando…".
+    if (App.telaAtual() === 'login' && document.getElementById('login-entrar') === botao) {
+      botao.disabled = false;
+      botao.textContent = 'Entrar';
+      if (!erro.textContent) erro.textContent = 'Entrou, mas o servidor recusou abrir os dados. Tente de novo em instantes.';
+    }
   }
 
   document.addEventListener('submit', e => {

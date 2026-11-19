@@ -24,10 +24,19 @@
   }
 
   // Espera a resposta do supabase-js e transforma erro em mensagem para o usuário.
+  // Relógio do login do Supabase adiantado em relação ao do banco: o banco recusa o token novo
+  // ("JWT issued at future", PGRST303) por um tempo. Espera e tenta de novo antes de desistir.
+  const ehFuturo = e => !!e && e.code === 'PGRST303' && /future/i.test(e.message || '');
+  const ESPERA_FUTURO = window.__ESPERA_FUTURO || [1000, 2000, 3000, 5000, 8000, 10000];
   async function exigir(pedido) {
     let r;
-    try { r = await pedido; } catch (err) { throw new Error(ehRede(err) ? SEM_INTERNET : String((err && err.message) || err)); }
+    for (let tentativa = 0; ; tentativa++) {
+      try { r = await pedido; } catch (err) { throw new Error(ehRede(err) ? SEM_INTERNET : String((err && err.message) || err)); }
+      if (!ehFuturo(r.error) || tentativa >= ESPERA_FUTURO.length) break;
+      await new Promise(ok => setTimeout(ok, ESPERA_FUTURO[tentativa])); // o supabase-js refaz o pedido a cada await
+    }
     if (!r.error) return r.data;
+    if (ehFuturo(r.error)) throw new Error('O servidor do Supabase está com o relógio adiantado e recusou o login. Tente de novo em alguns minutos ou reinicie o projeto no painel do Supabase.');
     if (r.status === 401 || r.error.code === 'PGRST301' || r.error.code === 'PGRST303') {
       await avisarSaida();
       const e = new Error('Sua sessão expirou. Entre de novo.');
